@@ -1,3 +1,5 @@
+import json
+
 class GameStats:
     """Tracks statistics for Alien Invasion."""
 
@@ -5,7 +7,7 @@ class GameStats:
         self.settings = ai_game.settings
         self.reset_stats()
         self.game_active = False        ## starts game in an inactive state
-        self.high_score = 0
+        self.open_savegame()
 
     def reset_stats(self):
         """Initialize statistics that can change during the game."""
@@ -13,3 +15,15 @@ class GameStats:
         self.game_active = True
         self.score = 0
         self.level = 1
+
+    def open_savegame(self):
+        try:
+            with open('high_score.txt') as score_file:
+                score = json.load(score_file)
+                self.high_score = int(score)
+        except:
+            self.high_score = 0
+
+    def save_game(self):
+        with open('high_score.txt', 'w') as score_file:
+            json.dump(self.high_score, score_file)

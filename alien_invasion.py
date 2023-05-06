@@ -1,6 +1,6 @@
 import sys
-from time import sleep
 import pygame
+from time import sleep
 from settings import Settings
 from ship import Ship
 from game_stats import GameStats
@@ -17,20 +17,22 @@ class AlienInvasion:
         """Initialize the game, and create game resources."""
         pygame.init()
         self.settings = Settings()
-        self.screen = pygame.display.set_mode(
-            (self.settings.screen_width, self.settings.screen_height))
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+        self.SCREEN_MENU = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
-        self.stats = GameStats(self)            ## Creates an instance to sve gamestats
+        self.stats = GameStats(self)
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.play_button = Button(self, "Play")
+        self.BG_MENU = pygame.image.load("image/Background.png")
         self.sb = Scoreboard(self)
+       
 
     def run_game(self):
         """Start the main loop for the game."""
         while True:
+            self.settings.clock.tick(self.settings.fps)
             self._check_events()
             if self.stats.game_active:
                 self.ship.update()
@@ -40,7 +42,7 @@ class AlienInvasion:
             self._update_screen()
 
     def _check_events(self):
-        # Responds to keypresses and mouse events.
+        """Responds to keypresses and mouse events."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -48,25 +50,6 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                self._check_play_button(mouse_pos)
-
-    def _check_play_button(self, mouse_pos):
-        """Starts a new game if the player hits "Play" """
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.stats.game_active:
-            self.stats.reset_stats()
-            self.stats.game_active = True
-            self.sb.prep_score()
-            self.sb.prep_level()
-            self.sb.prep_ships()
-            self.aliens.empty()
-            self.bullets.empty()
-            self._create_fleet()
-            self.ship.center_ship()
-            pygame.mouse.set_visible(False)
-            self.settings.initialize_dynamic_settings()
 
     def _check_keydown_events(self, event):
         """Responds to keypresses"""
@@ -74,8 +57,9 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
-        elif event.key == pygame.K_q:
-            sys.exit()
+        elif event.key == pygame.K_ESCAPE:
+            pygame.mouse.set_visible(True)
+            self.main_menu()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
 
@@ -152,15 +136,14 @@ class AlienInvasion:
 
     def _update_screen(self):
         """Updates the images on the screen and flip to the new screen."""
-        self.screen.fill(self.settings.bg_color)
+        self.screen.blit(self.settings.bg_img, (0,0))
+        ##self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
         self.sb.show_score()
-        if not self.stats.game_active:        ## draws the button in an inactive game
-            self.play_button.draw_button()
-        pygame.display.flip()                   ## draws the last visible screen
+        pygame.display.flip()
 
     def _check_fleet_edges(self):
         """Respond appropriately if aliens have reached an edge."""
@@ -187,7 +170,9 @@ class AlienInvasion:
             sleep(0.5)
         else:
             self.stats.game_active = False
+            self.stats.save_game()
             pygame.mouse.set_visible(True)
+            self.end_screen()
 
     def _check_aliens_bottom(self):
         """Check if any aliens have reached the bottom of the screen."""
@@ -197,8 +182,137 @@ class AlienInvasion:
                 self._ship_hit()
                 break
 
+    def get_font(self, size):
+        return pygame.font.SysFont(None, size)
+
+    def play(self):
+        """Starts a new game if the player hits "Play" """
+        self.stats.reset_stats()
+        self.stats.game_active = True
+        self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
+        self.aliens.empty()
+        self.bullets.empty()
+        self._create_fleet()
+        self.ship.center_ship()
+        pygame.mouse.set_visible(False)
+        self.settings.initialize_dynamic_settings()
+        sleep(1)
+        self.run_game()
+    
+    def options(self):
+        while True:
+            OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+
+            self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
+            pygame.display.set_caption("Options")
+
+
+            SOUND_BUTTON = Button(image=None, pos=(640, 400), 
+                                text_input="Sound", font=self.get_font(75), base_color="Black", hovering_color="Green")
+            
+            OPTIONS_BACK = Button(image=None, pos=(640, 550), 
+                                text_input="BACK", font=self.get_font(75), base_color="Black", hovering_color="Green")
+
+
+            for button in [SOUND_BUTTON, OPTIONS_BACK]:
+                button.changeColor(OPTIONS_MOUSE_POS)
+                button.update(self.SCREEN_MENU)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                        self.main_menu()
+
+            pygame.display.update()
+
+    def main_menu(self):
+        while True:
+            self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
+            pygame.display.set_caption("Menu")
+
+            MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+            MENU_TEXT = self.get_font(100).render("MAIN MENU", True, "#b68f40")
+            MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
+
+            PLAY_BUTTON = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 250), 
+                                text_input="PLAY", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
+            OPTIONS_BUTTON = Button(image=pygame.image.load("image/Options Rect.png"), pos=(640, 400), 
+                                text_input="OPTIONS", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
+            QUIT_BUTTON = Button(image=pygame.image.load("image/Quit Rect.png"), pos=(640, 550), 
+                                text_input="QUIT", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
+
+            self.SCREEN_MENU.blit(MENU_TEXT, MENU_RECT)
+
+            for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+                button.changeColor(MENU_MOUSE_POS)
+                button.update(self.SCREEN_MENU)
+        
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                        self.play()
+                    if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                        self.options()
+                    if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                        pygame.quit()
+                        sys.exit()
+
+            pygame.display.update()
+
+    def end_screen(self):
+        while True:
+            self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
+            pygame.display.set_caption("End Screen")
+
+            MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+            SCREEN_TEXT = self.get_font(100).render("END SCREEN", True, "#b68f40")
+            SCREEN_RECT = SCREEN_TEXT.get_rect(center=(640, 100))
+     
+            self.sb.high_score = round(self.stats.high_score, -1)
+            self.high_score = self.sb.high_score_str = "{:,}".format(self.sb.high_score)
+
+            HSCORE_BUTTON = Button(image=None, pos=(640, 250), 
+                                text_input=f'High Score: {self.high_score}', font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
+            NGAME_BUTTON = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 400), 
+                                text_input="NEW GAME", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")          
+            OPTIONS_BUTTON = Button(image=pygame.image.load("image/Options Rect.png"), pos=(640, 550), 
+                                text_input="OPTIONS", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
+            QUIT_BUTTON = Button(image=pygame.image.load("image/Quit Rect.png"), pos=(640, 700), 
+                                text_input="QUIT", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
+
+            self.SCREEN_MENU.blit(SCREEN_TEXT, SCREEN_RECT)
+
+            for button in [HSCORE_BUTTON, NGAME_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+                button.changeColor(MENU_MOUSE_POS)
+                button.update(self.SCREEN_MENU)
+        
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if NGAME_BUTTON.checkForInput(MENU_MOUSE_POS):
+                        self.play()
+                    if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                        self.options()
+                    if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                        pygame.quit()
+                        sys.exit()
+
+            pygame.display.update()
+
+
 
 if __name__ == '__main__':
-    # Creates instance of the game
     ai = AlienInvasion()
-    ai.run_game()
+    ai.main_menu()

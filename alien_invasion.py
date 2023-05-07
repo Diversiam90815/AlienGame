@@ -8,6 +8,8 @@ from scoreboard import Scoreboard
 from button import Button
 from bullet import Bullet
 from alien import Alien
+from random import choice
+#from alien_laser import Alien_Laser
 
 
 class AlienInvasion:
@@ -22,11 +24,12 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
         self.stats = GameStats(self)
         self.ship = Ship(self)
+        self.sb = Scoreboard(self)
+        #self.alaser = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.BG_MENU = pygame.image.load("image/Background.png")
-        self.sb = Scoreboard(self)
+        self.BG_MENU = pygame.image.load("image/Space_Background_Menu.jpg")
        
 
     def run_game(self):
@@ -125,6 +128,13 @@ class AlienInvasion:
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
+    #def alien_shoot(self):
+    #    if self.aliens:
+    #        random_alien = choice(self.aliens)
+    #        laser_sprite = Alien_Laser(random_alien.rect.center)
+    #        self.alaser.add(laser_sprite)
+
+
     def _create_alien(self, alien_number, row_number):
         """Create alien and place it in the row."""
         alien = Alien(self)
@@ -209,10 +219,10 @@ class AlienInvasion:
             pygame.display.set_caption("Options")
 
 
-            SOUND_BUTTON = Button(image=None, pos=(640, 400), 
+            SOUND_BUTTON = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 400), 
                                 text_input="Sound", font=self.get_font(75), base_color="Black", hovering_color="Green")
             
-            OPTIONS_BACK = Button(image=None, pos=(640, 550), 
+            OPTIONS_BACK = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 550), 
                                 text_input="BACK", font=self.get_font(75), base_color="Black", hovering_color="Green")
 
 
@@ -240,11 +250,11 @@ class AlienInvasion:
             MENU_TEXT = self.get_font(100).render("MAIN MENU", True, "#b68f40")
             MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-            PLAY_BUTTON = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 250), 
+            PLAY_BUTTON = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 300), 
                                 text_input="PLAY", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
-            OPTIONS_BUTTON = Button(image=pygame.image.load("image/Options Rect.png"), pos=(640, 400), 
+            OPTIONS_BUTTON = Button(image=pygame.image.load("image/Options Rect.png"), pos=(640, 450), 
                                 text_input="OPTIONS", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
-            QUIT_BUTTON = Button(image=pygame.image.load("image/Quit Rect.png"), pos=(640, 550), 
+            QUIT_BUTTON = Button(image=pygame.image.load("image/Quit Rect.png"), pos=(640, 600), 
                                 text_input="QUIT", font=self.get_font(75), base_color="#d7fcd4", hovering_color="White")
 
             self.SCREEN_MENU.blit(MENU_TEXT, MENU_RECT)

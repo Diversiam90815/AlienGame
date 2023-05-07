@@ -13,26 +13,26 @@ class Settings:
         self.fps = 60
         self.bg_img = pygame.image.load("image/Space_Background.jpg")
         self.bg_color = (230, 230, 230)
-        ##self.ship_speed = 1.5
-        self.ship_limit = 1
+        self.ship_speed = 5.0
+        self.ship_limit = 3
         ##self.bullet_speed = 1.0
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (60, 60, 60)
-        self.bullets_allowed = 4
-        self.alien_speed = 1.0
-        self.fleet_drop_speed = 30
+        self.bullets_allowed = 8
+        self.alien_speed = 1.5
+        self.fleet_drop_speed = 15
         ##self.fleet_direction = 1            ## 1 for right, -1 for left
-        self.speedup_scale = 1.1
+        self.speedup_scale = 1.3
         self.score_scale = 1.5
         self.initialize_dynamic_settings()
 
 
     def initialize_dynamic_settings(self):
         """Initialize the settings that change throughout the game."""
-        self.ship_speed = 1.2
-        self.bullet_speed = 3.5
-        self.alien_speed = 1.0
+        ##self.ship_speed = 5.0
+        self.bullet_speed = 5.0
+        self.alien_speed = 2.0
         self.fleet_direction = 1            ## 1 for right, -1 for left
         self.alien_points = 50
 

@@ -11,20 +11,11 @@ class Ship(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
-
-        ## loads the image of the ship.
         self.image = pygame.image.load('image/Ship_New_small.png')
         self.rect = self.image.get_rect()
-
-
-        ## place the ship in the middle at the bottom
         self.rect.midbottom = self.screen_rect.midbottom
-
-        ## saves a float for the center of the ship
-        self.x = float(self.rect.x)
-
-        ## movement flag
-        self.moving_right = False
+        self.x = float(self.rect.x)                         ## saves a float for the center of the ship
+        self.moving_right = False                           ## movement flag
         self.moving_left = False
 
     def update(self):
@@ -33,7 +24,7 @@ class Ship(Sprite):
             self.x += self.settings.ship_speed
         if self.moving_left and self.rect.left > 0:
             self.x -= self.settings.ship_speed
-        self.rect.x = self.x            ## updates the rect-object based on self.x
+        self.rect.x = self.x                                ## updates the rect-object based on self.x
 
     def blitme(self):
         """Draw the ship at its current position"""

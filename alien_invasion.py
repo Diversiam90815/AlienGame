@@ -9,7 +9,7 @@ from button import Button
 from bullet import Bullet
 from alien import Alien
 from random import choice
-#from alien_laser import Alien_Laser
+from alien_laser import Alien_Laser
 
 
 class AlienInvasion:
@@ -25,11 +25,13 @@ class AlienInvasion:
         self.stats = GameStats(self)
         self.ship = Ship(self)
         self.sb = Scoreboard(self)
-        #self.alaser = pygame.sprite.Group()
+        self.alaser = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
         self.BG_MENU = pygame.image.load("image/Space_Background_Menu.jpg")
+        self.ALIENLASER = pygame.USEREVENT + 1
+        self.ALASER_TIMER = pygame.time.set_timer(self.ALIENLASER, self.settings.alaser_timer)
        
 
     def run_game(self):
@@ -42,6 +44,7 @@ class AlienInvasion:
                 self.bullets.update()
                 self._update_bullets()
                 self._update_aliens()
+                self.alaser.update()
             self._update_screen()
 
     def _check_events(self):
@@ -53,6 +56,8 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            if event.type == self.ALIENLASER:
+                self.alien_shoot()
 
     def _check_keydown_events(self, event):
         """Responds to keypresses"""
@@ -88,16 +93,21 @@ class AlienInvasion:
         self._check_bullet_alien_collisions()
 
     def _check_bullet_alien_collisions(self):
-        """Checks if aliens got hit by a bullet and removes the alien."""
-        collisions = pygame.sprite.groupcollide\
-            (self.bullets, self.aliens, True, True)
-        if collisions:
-            for aliens in collisions.values():
+        """Checks if aliens got hit by a bullet and removes the alien as well as if we got hit by a laser."""
+        collisions_alien = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+        collisions_player = pygame.sprite.spritecollideany(self.ship, self.alaser)
+
+        if collisions_alien:
+            for aliens in collisions_alien.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+        if collisions_player:
+           self._ship_hit()
+
         """Destroys bullets and creates a new fleet."""
         if not self.aliens:
+            sleep(0.3)
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
@@ -128,12 +138,11 @@ class AlienInvasion:
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
 
-    #def alien_shoot(self):
-    #    if self.aliens:
-    #        random_alien = choice(self.aliens)
-    #        laser_sprite = Alien_Laser(random_alien.rect.center)
-    #        self.alaser.add(laser_sprite)
-
+    def alien_shoot(self):
+        if self.aliens.sprites():
+            random_alien = choice(self.aliens.sprites())
+            laser_sprite = Alien_Laser(self, random_alien.rect.center)
+            self.alaser.add(laser_sprite)
 
     def _create_alien(self, alien_number, row_number):
         """Create alien and place it in the row."""
@@ -147,10 +156,11 @@ class AlienInvasion:
     def _update_screen(self):
         """Updates the images on the screen and flip to the new screen."""
         self.screen.blit(self.settings.bg_img, (0,0))
-        ##self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        for alaser in self.alaser.sprites():
+            alaser.draw_laser()
         self.aliens.draw(self.screen)
         self.sb.show_score()
         pygame.display.flip()
@@ -175,6 +185,7 @@ class AlienInvasion:
             self.sb.prep_ships()
             self.aliens.empty()
             self.bullets.empty()
+            self.alaser.empty()
             self._create_fleet()
             self.ship.center_ship()
             sleep(0.5)
@@ -219,6 +230,9 @@ class AlienInvasion:
             pygame.display.set_caption("Options")
 
 
+            GAMEPLAY_BUTTON = Button(image=pygame.image.load("image/Options Rect.png"), pos=(640, 250), 
+                                text_input="Gameplay", font=self.get_font(75), base_color="Black", hovering_color="Green")
+
             SOUND_BUTTON = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 400), 
                                 text_input="Sound", font=self.get_font(75), base_color="Black", hovering_color="Green")
             
@@ -226,7 +240,7 @@ class AlienInvasion:
                                 text_input="BACK", font=self.get_font(75), base_color="Black", hovering_color="Green")
 
 
-            for button in [SOUND_BUTTON, OPTIONS_BACK]:
+            for button in [GAMEPLAY_BUTTON,SOUND_BUTTON, OPTIONS_BACK]:
                 button.changeColor(OPTIONS_MOUSE_POS)
                 button.update(self.SCREEN_MENU)
 
@@ -237,6 +251,8 @@ class AlienInvasion:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                         self.main_menu()
+                    if GAMEPLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                        self.gameplay_info()
 
             pygame.display.update()
 
@@ -321,6 +337,38 @@ class AlienInvasion:
 
             pygame.display.update()
 
+
+    def gameplay_info(self):
+        while True:
+            GAMEPLAY_MOUSE_POS = pygame.mouse.get_pos()
+
+            self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
+            pygame.display.set_caption("Gameplay Information")
+
+            ## Write mechanics and rules in a text!
+
+            game_string = "You are under attack by multiple waves of alien ships.\n Shoot them before they get to you, but be aware: they will fight back!\n You have 3 lives"
+            
+            game_text = self.get_font(75).render(game_string, False, (0,0,0))
+            self.screen.blit(game_text, (0,0))
+
+            GAMEPLAY_BACK = Button(image=pygame.image.load("image/Play Rect.png"), pos=(640, 550), 
+                                text_input="BACK", font=self.get_font(75), base_color="Black", hovering_color="Green")
+
+
+            for button in [GAMEPLAY_BACK]:
+                button.changeColor(GAMEPLAY_MOUSE_POS)
+                button.update(self.SCREEN_MENU)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if GAMEPLAY_BACK.checkForInput(GAMEPLAY_MOUSE_POS):
+                        self.main_menu()
+
+            pygame.display.update()
 
 
 if __name__ == '__main__':

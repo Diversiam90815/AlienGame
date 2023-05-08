@@ -3,7 +3,7 @@ from pygame.sprite import Sprite
 
 
 class Alien_Laser(Sprite,):
-    def __init__(self, ai_game, pos): 
+    def __init__(self, ai_game, pos):
         super().__init__()
         self.image = pygame.image.load("image/Green_Laser_small.png")
         self.rect = self.image.get_rect(center = pos)
@@ -18,7 +18,7 @@ class Alien_Laser(Sprite,):
     def destroy(self):
         """Destroys the laser once it exits the screen."""
         if self.rect.y >= self.settings.screen_height:
-            self.kill
+            self.kill()
 
     def draw_laser(self):
         """Draw the laser to the screen."""

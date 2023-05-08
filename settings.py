@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 
 
 class Settings:
@@ -26,7 +25,6 @@ class Settings:
         self.alspeed = -8
         self.initialize_dynamic_settings()
 
-
     def initialize_dynamic_settings(self):
         """Initialize the settings that change throughout the game."""
         self.ship_speed = 5.0
@@ -35,7 +33,6 @@ class Settings:
         self.fleet_direction = 1            ## 1 for right, -1 for left
         self.alien_points = 50
         self.alaser_timer = 1000
-
 
     def increase_speed(self):
         """Increase the speed settings and alien point values."""

@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\audio",
+    "\\audio\\SFX",
     "\\image"
   ],
-  "SelectedNode": "\\alien_invasion.py",
+  "SelectedNode": "\\space_war.py",
   "PreviewInSolutionExplorer": false
 }

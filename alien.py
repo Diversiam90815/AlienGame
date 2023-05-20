@@ -12,6 +12,7 @@ class Alien(Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width           ## platziert es an den rechten oberen ecke
         self.rect.y = self.rect.height
+        #self.rect.center = [self.rect.x/2, self.rect.y/2]
         self.x = float(self.rect.x)              ## saves the exact position of the alien
         self.settings = ai_game.settings
 

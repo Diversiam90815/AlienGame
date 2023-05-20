@@ -2,7 +2,7 @@ import pygame
 from pygame.sprite import Sprite
 
 
-class Alien_Laser(Sprite,):
+class Alien_Laser(Sprite):
     def __init__(self, ai_game, pos):
         super().__init__()
         self.image = pygame.image.load("image/Green_Laser_small.png")

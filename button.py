@@ -1,13 +1,17 @@
 import pygame
-
+from settings import Settings
 
 class Button:
-	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+	def __init__(self, image, pos, text_input):
 		self.image = image
 		self.x_pos = pos[0]
 		self.y_pos = pos[1]
-		self.font = font
-		self.base_color, self.hovering_color = base_color, hovering_color
+		self.settings = Settings()
+		self.font = pygame.font.SysFont(self.settings.font, self.settings.btn_font_size)
+		#self.font = self.settings.font
+		#self.font_size = self.settings.btn_font_size		##CHECK
+		self.base_color = self.settings.font_color
+		self.hovering_color = self.settings.hover_color
 		self.text_input = text_input
 		self.text = self.font.render(self.text_input, True, self.base_color)
 		if self.image is None:

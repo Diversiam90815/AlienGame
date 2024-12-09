@@ -24,7 +24,7 @@ class SpaceWar:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         self.SCREEN_MENU = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Space War")
-        
+    
         self.stats = GameStats(self)
         self.ship = Ship(self)
         self.sb = Scoreboard(self)
@@ -52,12 +52,10 @@ class SpaceWar:
                 self.bullets.update()
                 self.update_bullets()
                 self.update_aliens()
-                #self.exp.update(self.settings.dt)
                 self.exp.update()
                 self.alaser.update()            
             self.update_screen()
            
-
 
     def check_events(self):
         """Responds to keypresses and mouse events."""

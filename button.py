@@ -8,8 +8,6 @@ class Button:
 		self.y_pos = pos[1]
 		self.settings = Settings()
 		self.font = pygame.font.SysFont(self.settings.font, self.settings.btn_font_size)
-		#self.font = self.settings.font
-		#self.font_size = self.settings.btn_font_size		##CHECK
 		self.base_color = self.settings.font_color
 		self.hovering_color = self.settings.hover_color
 		self.text_input = text_input

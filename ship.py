@@ -19,12 +19,12 @@ class Ship(Sprite):
         self.moving_left = False
 
     def update(self):
-        """Updates the ship's position based on the movement flag."""
-        if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += self.settings.ship_speed
-        if self.moving_left and self.rect.left > 0:
-            self.x -= self.settings.ship_speed
-        self.rect.x = self.x                                ## updates the rect-object based on self.x
+        """Update the ship's position within screen bounds."""
+        if self.moving_right:
+            self.x = min(self.x + self.settings.ship_speed, self.screen_rect.right - self.rect.width)
+        if self.moving_left:
+            self.x = max(self.x - self.settings.ship_speed, 0)
+        self.rect.x = self.x
 
     def blitme(self):
         """Draw the ship at its current position"""

@@ -6,6 +6,20 @@ class Settings:
 
     def __init__(self):
         """Initialize game's static settings."""
+        self.init_static_settings()
+        self.init_dynamic_settings()
+
+    def init_dynamic_settings(self):
+        """Initialize the settings that change throughout the game."""
+        self.ship_speed = 5.0
+        self.bullet_speed = 5.0
+        self.alien_speed = 2.0
+        self.fleet_direction = 1            ## 1 for right, -1 for left
+        self.alien_points = 50
+        self.alaser_timer = 1000
+
+    def init_static_settings(self):
+        """Initialize the settings that are constant throughout the game."""
         self.screen_width = 1280
         self.screen_height = 900
         self.clock = pygame.time.Clock()
@@ -27,16 +41,7 @@ class Settings:
         self.speedup_scale3 = 0.95
         self.score_scale = 1.5
         self.alspeed = -8
-        self.initialize_dynamic_settings()
 
-    def initialize_dynamic_settings(self):
-        """Initialize the settings that change throughout the game."""
-        self.ship_speed = 5.0
-        self.bullet_speed = 5.0
-        self.alien_speed = 2.0
-        self.fleet_direction = 1            ## 1 for right, -1 for left
-        self.alien_points = 50
-        self.alaser_timer = 1000
 
     def increase_speed(self):
         """Increase the speed settings and alien point values."""

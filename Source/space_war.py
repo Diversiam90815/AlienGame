@@ -38,7 +38,7 @@ class SpaceWar:
         self.explosions = pygame.sprite.Group()
 
         self.create_fleet()
-        self.BG_MENU = pygame.image.load("image/Space_Background_Menu.jpg")
+        self.BG_MENU = pygame.image.load("../Assets/image/Space_Background_Menu.jpg")
         self.ALIENLASER = pygame.USEREVENT + 1
         pygame.time.set_timer(self.ALIENLASER, self.settings.alaser_timer)
 
@@ -257,13 +257,13 @@ class SpaceWar:
             self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
             pygame.display.set_caption("Options")
 
-            GAMEPLAY_BUTTON = Button(image = pygame.image.load("image/Options Rect.png"), pos = (640, 250), 
+            GAMEPLAY_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 250), 
                               text_input = "Gameplay")
 
-            SOUND_BUTTON = Button(image = pygame.image.load("image/Play Rect.png"), pos = (640, 400), 
+            SOUND_BUTTON = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 400), 
                                 text_input = "Sound")
             
-            OPTIONS_BACK = Button(image = pygame.image.load("image/Play Rect.png"), pos = (640, 550), 
+            OPTIONS_BACK = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 550), 
                                 text_input = "BACK")
 
             for button in [GAMEPLAY_BUTTON, SOUND_BUTTON, OPTIONS_BACK]:
@@ -296,13 +296,13 @@ class SpaceWar:
             MENU_TEXT = self.get_font(100).render("MAIN MENU", True, self.settings.menutitle_color)
             MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-            PLAY_BUTTON = Button(image = pygame.image.load("image/Play Rect.png"), pos = (640, 300), 
+            PLAY_BUTTON = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 300), 
                                 text_input = "PLAY")
 
-            OPTIONS_BUTTON = Button(image = pygame.image.load("image/Options Rect.png"), pos = (640, 450), 
+            OPTIONS_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 450), 
                              text_input = "OPTIONS")
 
-            QUIT_BUTTON = Button(image = pygame.image.load("image/Quit Rect.png"), pos = (640, 600), 
+            QUIT_BUTTON = Button(image = pygame.image.load("../Assets/image/Quit Rect.png"), pos = (640, 600), 
                                 text_input = "QUIT")
 
             self.SCREEN_MENU.blit(MENU_TEXT, MENU_RECT)
@@ -347,13 +347,13 @@ class SpaceWar:
             HSCORE_BUTTON = Button(image = None, pos = (640, 250), 
                                 text_input = f'High Score: {self.high_score}')
 
-            NGAME_BUTTON = Button(image = pygame.image.load("image/Options Rect.png"), pos = (640, 400), 
+            NGAME_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 400), 
                                 text_input = "NEW GAME")
 
-            OPTIONS_BUTTON = Button(image = pygame.image.load("image/Options Rect.png"), pos = (640, 550), 
+            OPTIONS_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 550), 
                                 text_input = "OPTIONS")
 
-            QUIT_BUTTON = Button(image = pygame.image.load("image/Quit Rect.png"), pos = (640, 700), 
+            QUIT_BUTTON = Button(image = pygame.image.load("../Assets/image/Quit Rect.png"), pos = (640, 700), 
                                 text_input = "QUIT")
 
 
@@ -398,7 +398,7 @@ class SpaceWar:
             game_text = self.get_font(75).render(game_string, False, (0, 0, 0))
             self.screen.blit(game_text, (0, 0))
 
-            GAMEPLAY_BACK = Button(image = pygame.image.load("image/Play Rect.png"), pos = (640, 550), 
+            GAMEPLAY_BACK = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 550), 
                                 text_input = "BACK")
 
             for button in [GAMEPLAY_BACK]:

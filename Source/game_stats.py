@@ -18,7 +18,7 @@ class GameStats:
 
     def open_savegame(self):
         try:
-            with open('high_score.txt') as score_file:
+            with open('../high_score.txt') as score_file:
                 score = json.load(score_file)
                 self.high_score = int(score)
         except:

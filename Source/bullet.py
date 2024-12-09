@@ -10,7 +10,7 @@ class Bullet(Sprite):
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings
-        self.image = pygame.image.load("image/Red_Laser_small.png")
+        self.image = pygame.image.load("../Assets/image/Red_Laser_small.png")
         self.rect = self.image.get_rect()
         self.rect.midtop = ai_game.ship.rect.midtop
         self.y = float(self.rect.y)             ## saves the bullets position as a float

@@ -5,7 +5,7 @@ from pygame.sprite import Sprite
 class Alien_Laser(Sprite):
     def __init__(self, ai_game, pos):
         super().__init__()
-        self.image = pygame.image.load("image/Green_Laser_small.png")
+        self.image = pygame.image.load("../Assets/image/Green_Laser_small.png")
         self.rect = self.image.get_rect(center = pos)
         self.settings = ai_game.settings
         self.screen = ai_game.screen

@@ -1,4 +1,3 @@
-import pygame
 from pygame.sprite import Sprite
 
 class Explosion(Sprite):
@@ -10,6 +9,7 @@ class Explosion(Sprite):
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()
         self.counter = 0
+
 
     def update(self):
         '''updates the animation'''
@@ -24,6 +24,7 @@ class Explosion(Sprite):
         if self.index >= len(self.images) - 1 and self.counter >= EXPLOSION_SPEED: 
             self.images.clear()
             self.kill()
+
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

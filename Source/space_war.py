@@ -14,6 +14,7 @@ from explosion import Explosion
 from audio import Audio
 from AssetManager import AssetManager
 
+
 class SpaceWar:
     """Overall class to manage game assets and behaviour."""
 

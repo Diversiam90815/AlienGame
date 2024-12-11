@@ -11,12 +11,14 @@ class GameStats:
         self.game_active = False        ## starts game in an inactive state
         self.open_savegame()
 
+
     def reset_stats(self):
         """Initialize statistics that can change during the game."""
         self.ships_left = self.settings.ship_limit
         self.game_active = True
         self.score = 0
         self.level = 1
+
 
     def open_savegame(self):
         try:
@@ -25,6 +27,7 @@ class GameStats:
                 self.high_score = int(score)
         except:
             self.high_score = 0
+
 
     def save_game(self):
         with open(self.high_score_file, 'w') as score_file:

@@ -9,6 +9,7 @@ class Settings:
         self.init_static_settings()
         self.init_dynamic_settings()
 
+
     def init_dynamic_settings(self):
         """Initialize the settings that change throughout the game."""
         self.ship_speed = 5.0
@@ -18,14 +19,13 @@ class Settings:
         self.alien_points = 50
         self.alaser_timer = 1000
 
+
     def init_static_settings(self):
         """Initialize the settings that are constant throughout the game."""
         self.screen_width = 1280
         self.screen_height = 900
         self.clock = pygame.time.Clock()
         self.fps = 60
-        #self.bg_img = self.assets.get_image("space_bg")
-        #self.bg_img = pygame.image.load("../Assets/image/Space_Background.jpg")
         self.font = "Arial"
         self.font_color = "Black"
         self.hover_color = "Red"

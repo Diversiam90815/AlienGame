@@ -1,9 +1,6 @@
 import pygame
 from random import choice
 
-pygame.init()
-#pygame.mixer.init()
-
 class Audio:
     def __init__(self, assets):
         pygame.mixer.pre_init(frequency=48000)
@@ -39,25 +36,30 @@ class Audio:
         rand_bul_sfx = choice(bullet_sounds)
         rand_bul_sfx.play()
 
+
     def sfx_explosion(self):
         explosion_sounds = [self.explosion01, self.explosion02, self.explosion03]
         rand_exp_sfx = choice(explosion_sounds)
         rand_exp_sfx.play()
+
 
     def sfx_btnclick(self):
         button_click_sounds = [self.btnClick01, self.btnClick02]
         rand_btn_sfx = choice(button_click_sounds)
         rand_btn_sfx.play()
         
+
     def sfx_exit(self):
         exit_sounds = [self.btnExit01, self.btnExit02, self.btnExit03]
         rand_ex_sfx = choice(exit_sounds)
         rand_ex_sfx.play()
 
+
     def sfx_laser(self):
         laser_sounds = [self.laser01]
         rand_las_sfx = choice(laser_sounds)
         rand_las_sfx.play()
+
 
     def sfx_ship_hit(self):
         ship_hit_sounds = [self.ship_hit]

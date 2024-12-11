@@ -5,24 +5,33 @@ pygame.init()
 #pygame.mixer.init()
 
 class Audio:
-    def __init__(self):
+    def __init__(self, assets):
         pygame.mixer.pre_init(frequency=48000)
         '''Initialize the sound effects.'''
-        self.bullet01 = pygame.mixer.Sound('../Assets/audio/SFX/Bullet 01.wav')
-        self.bullet02 = pygame.mixer.Sound('../Assets/audio/SFX/Bullet 02.wav')
-        self.bullet03 = pygame.mixer.Sound('../Assets/audio/SFX/Bullet 03.wav')
-        self.bullet04 = pygame.mixer.Sound('../Assets/audio/SFX/Bullet 04.wav')
-        self.bullet05 = pygame.mixer.Sound('../Assets/audio/SFX/Bullet 05.wav')
-        self.btnClick01 = pygame.mixer.Sound('../Assets/audio/SFX/Button Click 01.wav')
-        self.btnClick02 = pygame.mixer.Sound('../Assets/audio/SFX/Button Click 02.wav')
-        self.btnExit01 = pygame.mixer.Sound('../Assets/audio/SFX/Exit BTN 01.wav')
-        self.btnExit02 = pygame.mixer.Sound('../Assets/audio/SFX/Exit BTN 02.wav')
-        self.btnExit03 = pygame.mixer.Sound('../Assets/audio/SFX/Exit BTN 03.wav')
-        self.explosion01 = pygame.mixer.Sound('../Assets/audio/SFX/Explosion 01.wav')
-        self.explosion02 = pygame.mixer.Sound('../Assets/audio/SFX/Explosion 02.wav')
-        self.explosion03 = pygame.mixer.Sound('../Assets/audio/SFX/Explosion 03.wav')
-        self.laser01 = pygame.mixer.Sound('../Assets/audio/SFX/Laser 01.wav')
-        self.ship_hit = pygame.mixer.Sound('../Assets/audio/SFX/Ship got hit.wav')
+        self.bullet01 = assets.get_sound("bullet_01")
+        self.bullet02 = assets.get_sound("bullet_02")
+        self.bullet03 = assets.get_sound("bullet_03")
+        self.bullet04 = assets.get_sound("bullet_04")
+        self.bullet05 = assets.get_sound("bullet_05")
+
+        self.btnClick01 = assets.get_sound("button_click_01")
+        self.btnClick02 = assets.get_sound("button_click_02")
+        
+        self.btnExitClick01 = assets.get_sound("button_exit_01")
+        self.btnExitClick02 = assets.get_sound("button_exit_02")
+        self.btnExitClick03 = assets.get_sound("button_exit_03")
+
+        self.btnExit01 = assets.get_sound("button_exit_01")
+        self.btnExit02 = assets.get_sound("button_exit_02")
+        self.btnExit03 = assets.get_sound("button_exit_03")
+
+        self.explosion01 = assets.get_sound("explosion_01")
+        self.explosion02 = assets.get_sound("explosion_02")
+        self.explosion03 = assets.get_sound("explosion_03")
+
+        self.laser01 = assets.get_sound("laser_01")
+
+        self.ship_hit = assets.get_sound("ship_hit")
 
 
     def sfx_bullet(self):

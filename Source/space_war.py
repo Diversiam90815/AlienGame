@@ -12,7 +12,7 @@ from random import choice
 from alien_laser import Alien_Laser
 from explosion import Explosion
 from audio import Audio
-
+from AssetManager import AssetManager
 
 class SpaceWar:
     """Overall class to manage game assets and behaviour."""
@@ -20,17 +20,21 @@ class SpaceWar:
     def __init__(self):
         """Initialize the game, and create game resources."""
         pygame.init()
+        self.assets = AssetManager()
+        self.assets.load_all_assets()
+
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+
         self.SCREEN_MENU = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Space War")
     
-        self.stats = GameStats(self)
-        self.ship = Ship(self)
-        self.sb = Scoreboard(self)
-        self.alien = Alien(self)
-        self.exp = Explosion()
-        self.audio = Audio()
+        self.stats = GameStats(self, self.assets)
+        self.ship = Ship(self, self.assets)
+        self.sb = Scoreboard(self, self.assets)
+        self.alien = Alien(self, self.assets)
+        self.exp = Explosion(self.assets)
+        self.audio = Audio(self.assets)
 
         self.alaser = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
@@ -38,9 +42,15 @@ class SpaceWar:
         self.explosions = pygame.sprite.Group()
 
         self.create_fleet()
-        self.BG_MENU = pygame.image.load("../Assets/image/Space_Background_Menu.jpg")
+        self.BG_MENU = self.assets.get_image("space_bg")
         self.ALIENLASER = pygame.USEREVENT + 1
         pygame.time.set_timer(self.ALIENLASER, self.settings.alaser_timer)
+
+        self.options_img = self.assets.get_image("options_button")
+        self.play_img = self.assets.get_image("play_button")
+        self.quit_img = self.assets.get_image("quit_button")
+
+
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -69,6 +79,7 @@ class SpaceWar:
             if event.type == self.ALIENLASER:
                 self.alien_shoot()
 
+
     def check_keydown_events(self, event):
         """Responds to keypresses"""
         if event.key == pygame.K_RIGHT:
@@ -81,6 +92,7 @@ class SpaceWar:
         elif event.key == pygame.K_SPACE:
             self.fire_bullet()
 
+
     def check_keyup_events(self, event):
         """Responds to key releases."""
         if event.key == pygame.K_RIGHT:
@@ -88,17 +100,20 @@ class SpaceWar:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
 
+
     def fire_bullet(self):
         """Create a new bullet and add it to its group."""
         if len(self.bullets) < self.settings.bullets_allowed:
             self.audio.sfx_bullet()
-            new_bullet = Bullet(self)
+            new_bullet = Bullet(self, self.assets)
             self.bullets.add(new_bullet)
 
+
     def show_explosion(self, position):
-        self.exp = Explosion()
+        self.exp = Explosion(self.assets)
         self.exp.rect.center = position
         self.explosions.add(self.exp)
+
 
     def update_bullets(self):
         """Updates the position of all bullets and gets rid of old bullets."""
@@ -136,6 +151,7 @@ class SpaceWar:
             self.stats.level += 1
             self.sb.prep_level()
 
+
     def update_aliens(self):
         """Check if the fleet is at an edge, then update the positions of all aliens in the fleet."""
         self.check_fleet_edges()
@@ -145,6 +161,7 @@ class SpaceWar:
             self.audio.sfx_ship_hit()
             self.ship_hit()
         self.check_aliens_bottom()
+
 
     def create_fleet(self):
         """Create the fleet of aliens."""
@@ -164,22 +181,27 @@ class SpaceWar:
     def alien_shoot(self):
         if self.aliens.sprites():
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = Alien_Laser(self, random_alien.rect.center)
+            laser_sprite = Alien_Laser(self, random_alien.rect.center, self.assets)
             self.alaser.add(laser_sprite)
             self.audio.sfx_laser()
 
+
     def create_alien(self, alien_number, row_number):
-        """Create alien and place it in the row."""
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
+        alien = Alien(self, self.assets)
+        alien_width = alien.rect.width
+        alien_height = alien.rect.height
+
         alien.x = alien_width + 2 * alien_width * alien_number
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+        alien.rect.y = alien_height + 2 * alien_height * row_number
+
         self.aliens.add(alien)
+
 
     def update_screen(self):
         """Updates the images on the screen and flip to the new screen."""
-        self.screen.blit(self.settings.bg_img, (0, 0))
+        self.bg_img = self.assets.get_image("space_bg")
+        self.screen.blit(self.bg_img, (0, 0))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
@@ -192,6 +214,7 @@ class SpaceWar:
         self.sb.show_score()
         pygame.display.flip()
 
+
     def check_fleet_edges(self):
         """Respond appropriately if aliens have reached an edge."""
         for alien in self.aliens.sprites():
@@ -199,11 +222,13 @@ class SpaceWar:
                 self.change_fleet_direction()
                 break
 
+
     def change_fleet_direction(self):
         """Drop the entire fleet and change its direction."""
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= (-1)
+
 
     def ship_hit(self):
         """Respond to the ship being hit by an alien."""
@@ -223,6 +248,7 @@ class SpaceWar:
             sleep(0.5)
             self.end_screen()
 
+
     def check_aliens_bottom(self):
         """Check if any aliens have reached the bottom of the screen."""
         screen_rect = self.screen.get_rect()
@@ -231,8 +257,10 @@ class SpaceWar:
                 self.ship_hit()
                 break
 
+
     def get_font(self, size):
         return pygame.font.SysFont(self.settings.font, size)
+
 
     def play(self):
         """Starts a new game if the player hits "Play" """
@@ -246,10 +274,11 @@ class SpaceWar:
         self.create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
-        self.settings.initialize_dynamic_settings()
+        self.settings.init_dynamic_settings()
         sleep(1)
         self.run_game()
     
+
     def options(self):
         while True:
             OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
@@ -257,13 +286,13 @@ class SpaceWar:
             self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
             pygame.display.set_caption("Options")
 
-            GAMEPLAY_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 250), 
+            GAMEPLAY_BUTTON = Button(image = self.options_img, pos = (640, 250), 
                               text_input = "Gameplay")
 
-            SOUND_BUTTON = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 400), 
+            SOUND_BUTTON = Button(image = self.play_img, pos = (640, 400), 
                                 text_input = "Sound")
             
-            OPTIONS_BACK = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 550), 
+            OPTIONS_BACK = Button(image = self.play_img, pos = (640, 550), 
                                 text_input = "BACK")
 
             for button in [GAMEPLAY_BUTTON, SOUND_BUTTON, OPTIONS_BACK]:
@@ -286,6 +315,7 @@ class SpaceWar:
 
             pygame.display.update()
 
+
     def main_menu(self):
         while True:
             self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
@@ -296,13 +326,13 @@ class SpaceWar:
             MENU_TEXT = self.get_font(100).render("MAIN MENU", True, self.settings.menutitle_color)
             MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 
-            PLAY_BUTTON = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 300), 
+            PLAY_BUTTON = Button(image = self.play_img, pos = (640, 300), 
                                 text_input = "PLAY")
 
-            OPTIONS_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 450), 
+            OPTIONS_BUTTON = Button(image = self.options_img, pos = (640, 450), 
                              text_input = "OPTIONS")
 
-            QUIT_BUTTON = Button(image = pygame.image.load("../Assets/image/Quit Rect.png"), pos = (640, 600), 
+            QUIT_BUTTON = Button(image = self.quit_img, pos = (640, 600), 
                                 text_input = "QUIT")
 
             self.SCREEN_MENU.blit(MENU_TEXT, MENU_RECT)
@@ -330,6 +360,7 @@ class SpaceWar:
 
             pygame.display.update()
 
+
     def end_screen(self):
         while True:
             self.SCREEN_MENU.blit(self.BG_MENU, (0, 0))
@@ -347,13 +378,13 @@ class SpaceWar:
             HSCORE_BUTTON = Button(image = None, pos = (640, 250), 
                                 text_input = f'High Score: {self.high_score}')
 
-            NGAME_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 400), 
+            NGAME_BUTTON = Button(image = self.options_img, pos = (640, 400), 
                                 text_input = "NEW GAME")
 
-            OPTIONS_BUTTON = Button(image = pygame.image.load("../Assets/image/Options Rect.png"), pos = (640, 550), 
+            OPTIONS_BUTTON = Button(image = self.options_img, pos = (640, 550), 
                                 text_input = "OPTIONS")
 
-            QUIT_BUTTON = Button(image = pygame.image.load("../Assets/image/Quit Rect.png"), pos = (640, 700), 
+            QUIT_BUTTON = Button(image = self.quit_img, pos = (640, 700), 
                                 text_input = "QUIT")
 
 
@@ -382,6 +413,7 @@ class SpaceWar:
 
             pygame.display.update()
 
+
     def gameplay_info(self):
         while True:
             GAMEPLAY_MOUSE_POS = pygame.mouse.get_pos()
@@ -398,9 +430,9 @@ class SpaceWar:
             game_text = self.get_font(75).render(game_string, False, (0, 0, 0))
             self.screen.blit(game_text, (0, 0))
 
-            GAMEPLAY_BACK = Button(image = pygame.image.load("../Assets/image/Play Rect.png"), pos = (640, 550), 
+            GAMEPLAY_BACK = Button(image = self.play_img, pos = (640, 550), 
                                 text_input = "BACK")
-
+ 
             for button in [GAMEPLAY_BACK]:
                 button.changeColor(GAMEPLAY_MOUSE_POS)
                 button.update(self.SCREEN_MENU)

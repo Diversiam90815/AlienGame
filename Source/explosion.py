@@ -2,13 +2,10 @@ import pygame
 from pygame.sprite import Sprite
 
 class Explosion(Sprite):
-    def __init__(self):
-        super().__init__()        
-        self.images = []
-        for num in range(1,6):
-            img = pygame.image.load(f'../Assets/image/Explosions/exp{num}.png')
-            img = pygame.transform.scale(img, (160,160))
-            self.images.append(img)
+    def __init__(self, assets):
+        super().__init__()
+        self.assets = assets        
+        self.images = self.assets.get_explosion_images()
         self.index = 0 
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()

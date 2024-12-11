@@ -5,8 +5,9 @@ from ship import Ship
 class Scoreboard:
     """A class to report scoring information."""
 
-    def __init__(self, ai_game):
+    def __init__(self, ai_game, assets):
         self.ai_game = ai_game
+        self.assets = assets
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
         self.settings = ai_game.settings
@@ -61,7 +62,7 @@ class Scoreboard:
         """Show how many ships are left."""
         self.ships = Group()
         for ship_number in range(self.stats.ships_left):
-            ship = Ship(self.ai_game)
+            ship = Ship(self.ai_game, self.assets)
             ship.rect.x = 10 + ship_number * ship.rect.width
             ship.rect.y = 10
             self.ships.add(ship)

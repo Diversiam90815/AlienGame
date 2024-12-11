@@ -12,14 +12,13 @@ class AssetManager:
 
 
     def load_all_assets(self):
-        # Load all images
         image_map = {
-            "green_laser": "Green_Laser_small.png",
-            "red_laser": "Red_Laser_small.png",
-            "alien": "Alien2_New_small.png",
-            "ship": "Ship_New_small.png",
-            "menu_bg": "Space_Background_Menu.jpg",
-            "space_bg": "Space_Background.jpg",
+            "green_laser": "Laser/Green_Laser_small.png",
+            "red_laser": "Laser/Red_Laser_small.png",
+            "alien": "Ship/Alien2_New_small.png",
+            "ship": "Ship/Ship_New_small.png",
+            "menu_bg": "Background/Space_Background_Menu.jpg",
+            "space_bg": "Background/Space_Background.jpg",
             "play_button": "Buttons/Play_Rect.png",
             "options_button": "Buttons/Options_Rect.png",
             "quit_button": "Buttons/Quit_Rect.png",
@@ -31,23 +30,22 @@ class AssetManager:
         }
         self.load_images(image_map)
 
-        # Load all sounds
         sound_map = {
-            "bullet_01": "SFX/Bullet_01.wav",
-            "bullet_02": "SFX/Bullet_02.wav",
-            "bullet_03": "SFX/Bullet_03.wav",
-            "bullet_04": "SFX/Bullet_04.wav",
-            "bullet_05": "SFX/Bullet_05.wav",
+            "bullet_01": "SFX/Bullet/Bullet_01.wav",
+            "bullet_02": "SFX/Bullet/Bullet_02.wav",
+            "bullet_03": "SFX/Bullet/Bullet_03.wav",
+            "bullet_04": "SFX/Bullet/Bullet_04.wav",
+            "bullet_05": "SFX/Bullet/Bullet_05.wav",
             "explosion_01": "SFX/Explosion/Explosion_01.wav",
             "explosion_02": "SFX/Explosion/Explosion_02.wav",
             "explosion_03": "SFX/Explosion/Explosion_03.wav",
-            "laser_01": "SFX/Laser_01.wav",
-            "button_click_01": "SFX/Button_Click_01.wav",
-            "button_click_02": "SFX/Button_Click_02.wav",
-            "button_exit_01": "SFX/Exit_BTN_01.wav",
-            "button_exit_02": "SFX/Exit_BTN_02.wav",
-            "button_exit_03": "SFX/Exit_BTN_03.wav",
-            "ship_hit": "SFX/Ship_Got_Hit.wav",
+            "laser_01": "SFX/Laser/Laser_01.wav",
+            "button_click_01": "SFX/Button/Button_Click_01.wav",
+            "button_click_02": "SFX/Button/Button_Click_02.wav",
+            "button_exit_01": "SFX/Button/Exit_BTN_01.wav",
+            "button_exit_02": "SFX/Button/Exit_BTN_02.wav",
+            "button_exit_03": "SFX/Button/Exit_BTN_03.wav",
+            "ship_hit": "SFX/Collision/Ship_Got_Hit.wav",
         }
         self.load_sounds(sound_map)
 
@@ -57,11 +55,9 @@ class AssetManager:
             self.load_image(name, relative_path)
 
 
-    def load_image(self, name, relative_path, convert_alpha=True):
+    def load_image(self, name, relative_path):
         full_path = os.path.join(self.images_folder, relative_path)
         image = pygame.image.load(full_path)
-#        if convert_alpha:
-#            image = image.convert_alpha()
         self.images[name] = image
 
 
